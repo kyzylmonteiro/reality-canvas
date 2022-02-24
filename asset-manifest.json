@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.ba015e21.css",
-    "main.js": "/static/js/main.e3aaf925.js",
-    "index.html": "/index.html",
-    "main.ba015e21.css.map": "/static/css/main.ba015e21.css.map",
-    "main.e3aaf925.js.map": "/static/js/main.e3aaf925.js.map"
+    "main.css": "/draco-ar/static/css/main.ba015e21.css",
+    "main.js": "/draco-ar/static/js/main.e3aaf925.js",
+    "index.html": "/draco-ar/index.html",
+    "main.ba015e21.css.map": "/draco-ar/static/css/main.ba015e21.css.map",
+    "main.e3aaf925.js.map": "/draco-ar/static/js/main.e3aaf925.js.map"
   },
   "entrypoints": [
     "static/css/main.ba015e21.css",
