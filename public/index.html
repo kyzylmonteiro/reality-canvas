@@ -1,11 +1,60 @@
 <!doctype html>
 <html>
   <head>
-    <title>Draco AR</title>
+    <title>Draco AR - 8th Wall</title>
     <link rel="shortcut icon" href="#" />
-  </head>
+<script src="https://cdn.8thwall.com/web/aframe/8frame-1.2.0.min.js"></script>
+    <script src="https://cdn.8thwall.com/web/xrextras/xrextras.js"></script>
+    <!--<script async src="https://apps.8thwall.com/xrweb?appKey=aIosYEDG37bs43LDn2FWvxVSjU4XVGKwRu3M3Y7p9V1KTWrtUOXArhFOuLFpzJmw2qfV7t"></script>-->
+  <script async src="https://apps.8thwall.com/xrweb?appKey=f0LPUhzxQRN1kc4sv4mM4ZRsl663KCFL7y7fj3Uc5wN7TNKY7TbKuJlwz5uu0zGbngfYA3"></script>
+    <!--<script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>--> 
+    <script>
+      /**AFRAME.registerComponent('cylinder', {
+      init: () => {
+        let cyl = document.getElementById('c')
+        cyl.setAttribute('color', 'blue')
+      }
+    })*/ 
 
+    </script>
+  </head>
   <body>
+    <a-scene
+    xrextras-almost-there
+    xrextras-loading
+    xrextras-runtime-error
+    renderer="colorManagement:true"
+    xrweb="allowedDevices:any;"
+    xrextras-gesture-detector
+  >
+    <a-camera id="camera" position="0 8 0" raycaster="objects: .cantap" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
+    <a-entity
+        light="
+          type: directional;
+          intensity: 0.8;
+          castShadow: true;
+          shadowMapHeight:2048;
+          shadowMapWidth:2048;
+          shadowCameraTop: 20;
+          shadowCameraBottom: -20;
+          shadowCameraRight: 20;
+          shadowCameraLeft: -20;
+          target: #camera"
+        xrextras-attach="target: camera; offset: 8 15 4"
+        position="1 4.3 2.5"
+        shadow
+      >
+      </a-entity>
+      <a-light type="ambient" intensity="0.5"></a-light>
+      <xrextras-named-image-target name="target-1">
+        <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4" ></a-plane>
+      </xrextras-named-image-target>-->
+      <a-cylinder cylinder id="c" color="yellow" height="6" theta-start="100" radius="2" theta-length="180" position="0 10 -10" rotation="0 180 0"></a-cylinder>
+      <a-entity hello-world></a-entity>
+      <xrextras-named-image-target name="target-2">
+        <a-cylinder drawing-plane id="drawing-plane" class="cantap" color="yellow" height="6" theta-start="100" radius="1.7" theta-length="300" position="0 0 -10" rotation="0 180 0"></a-cylinder>
+      </xrextras-named-image-target>
+    </a-scene> 
     <div id="root"></div>
   </body>
 </html>

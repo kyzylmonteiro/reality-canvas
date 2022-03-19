@@ -80,6 +80,14 @@ class Canvas extends Component {
     this.setState({ isPhysics: !this.state.isPhysics })
   }
 
+  getMaxValue(){
+    this.emit.max = document.getElementById("speedSlider").value
+  }
+
+  changeColor(color){
+      this.emit.color = color
+  }
+
   render() {
     return (
       <>
@@ -97,6 +105,22 @@ class Canvas extends Component {
             Emitter Line
           </button>
           <input name="isGoing" type="checkbox" checked={this.state.isPhysics} onChange={this.enablePhysics.bind(this)} />Enable Physics
+          <input id="speedSlider" type="range" min="0" max="20" defaultValue="10" onInput={this.getMaxValue.bind(this)}/>
+          <button id ='button' style={{backgroundColor: "#000000", color: "#FFFFFF"}} onClick={this.changeColor.bind(this, 'black')}>
+            Black
+          </button>
+          <button style={{backgroundColor: "#0000FF", color: "#FFFFFF"}} onClick={this.changeColor.bind(this, 'blue')}>
+            Blue
+          </button>
+          <button style={{backgroundColor: "#66CD00	", color: "#FFFFFF"}} onClick={this.changeColor.bind(this, 'green')}>
+            Green
+          </button>
+          <button style={{backgroundColor: "#FF0000", color: "#FFFFFF"}} onClick={this.changeColor.bind(this, 'red')}>
+            Red
+          </button>
+          <button style={{backgroundColor: "#FFFF00", color: "#000000"}} onClick={this.changeColor.bind(this, 'yellow')}>
+            Yellow
+          </button>
         </div>
         <div style={{ display: debug ? 'block' : 'none' }}>
           <div id="physics-container"></div>

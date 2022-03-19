@@ -27,6 +27,13 @@ class App extends Component {
   componentDidMount() {
     this.canvas = window.Canvas
 
+    AFRAME.registerComponent('cylinder', {
+      init: () => {
+        let cyl = document.getElementById('c')
+        cyl.setAttribute('color', 'red')
+      }
+    })
+
     AFRAME.registerComponent('drawing-plane', {
       init: () => {
         let el = document.querySelector('#drawing-plane')
@@ -34,15 +41,21 @@ class App extends Component {
         let konvaEl = document.querySelector('.konvajs-content canvas')
         konvaEl.width = konvaEl.height = this.size
         let texture = new THREE.Texture(konvaEl)
-        let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide })
+        let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide})
+        
         mesh.material = material
+        //window.mesh = mesh;
         mesh.material.transparent = true
+        //mesh.material.color.setHex( 0xFFA500);
         this.mesh = mesh
+
         el.sceneEl.addEventListener('mousedown', this.mouseDown.bind(this))
         el.sceneEl.addEventListener('mousemove', this.mouseMove.bind(this))
         el.sceneEl.addEventListener('mouseup', this.mouseUp.bind(this))
         el.sceneEl.addEventListener('onefingermove', this.mouseMove.bind(this))
         el.sceneEl.addEventListener('onefingerend', this.mouseUp.bind(this))
+        
+        el.classList.add("cantap"); 
       },
 
       tick: () => {
@@ -56,7 +69,7 @@ class App extends Component {
 
   mouseMove(event) {
     let mouse2D = { x: event.clientX, y: event.clientY }
-    this.setState({ mouse2D: mouse2D })
+    this.setState({ mouse2D: mouse2D, dragging: true})
   }
 
   mouseUp(event) {
@@ -94,10 +107,8 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <>
-        <Canvas />
-        <a-scene
+    /**<a-plane drawing-plane id="drawing-plane" class="cantap" position="0 5 -10" rotation="0 0 0" width="10" height="10" color="#FF0000"></a-plane>
+     * <a-scene
           xrextras-almost-there
           xrextras-loading
           xrextras-runtime-error
@@ -106,8 +117,12 @@ class App extends Component {
           xrextras-gesture-detector
         >
           <a-camera id="camera" look-controls="false" position="0 8 0" raycaster="objects: .cantap" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
-          <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 5 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
-        </a-scene>
+          <a-cylinder drawing-plane id="drawing-plane" class="cantap" color="yellow" height="6" theta-start="100" radius="2" theta-length="180" position="0 10 -10" rotation="0 180 0"></a-cylinder>
+        </a-scene>*/ 
+    return (
+      <>
+        <Canvas />
+      
       </>
     )
   }
