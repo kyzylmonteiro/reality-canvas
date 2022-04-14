@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Canvas from './Canvas'
 import './App.css'
+import Canvas from './Canvas'
 
 if (!window.XR8) {
   AFRAME = require('aframe')
@@ -22,57 +22,64 @@ class App extends Component {
       raycaster: new THREE.Raycaster(),
       XR8: window.XR8
     }
+    
   }
 
   componentDidMount() {
     this.canvas = window.Canvas
-
-    AFRAME.registerComponent('cylinder', {
-      init: () => {
-        let cyl = document.getElementById('c')
-        cyl.setAttribute('color', 'red')
-      }
-    })
-
     AFRAME.registerComponent('drawing-plane', {
       init: () => {
-        let el = document.querySelector('#drawing-plane')
-        let mesh = el.object3D.children[0]
-        let konvaEl = document.querySelector('.konvajs-content canvas')
-        konvaEl.width = konvaEl.height = this.size
-        let texture = new THREE.Texture(konvaEl)
-        let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide})
-        
-        mesh.material = material
-        //window.mesh = mesh;
-        mesh.material.transparent = true
-        //mesh.material.color.setHex( 0xFFA500);
-        this.mesh = mesh
-
-        el.sceneEl.addEventListener('mousedown', this.mouseDown.bind(this))
-        el.sceneEl.addEventListener('mousemove', this.mouseMove.bind(this))
-        el.sceneEl.addEventListener('mouseup', this.mouseUp.bind(this))
-        el.sceneEl.addEventListener('onefingermove', this.mouseMove.bind(this))
-        el.sceneEl.addEventListener('onefingerend', this.mouseUp.bind(this))
-        
-        el.classList.add("cantap"); 
+        this.init()
       },
-
       tick: () => {
-        this.update()
+        this.update() 
       }
     })
   }
+
+  init() {
+    let el = document.querySelector('#drawing-plane')
+    let mesh = el.object3D.children[0]
+    let konvaEl = document.querySelector('.konvajs-content canvas')
+    konvaEl.width = konvaEl.height = this.size
+    let texture = new THREE.Texture(konvaEl)
+    let material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide })
+    mesh.material = material
+    //mesh.material.transparent = true
+    this.mesh = mesh
+
+    el.sceneEl.addEventListener('mousedown', this.mouseDown.bind(this))
+    el.sceneEl.addEventListener('mousemove', this.mouseMove.bind(this))
+    el.sceneEl.addEventListener('mouseup', this.mouseUp.bind(this))
+    el.sceneEl.addEventListener('touchstart', this.touchStart.bind(this))
+    el.sceneEl.addEventListener('touchmove', this.touchMove.bind(this))
+    el.sceneEl.addEventListener('touchend', this.touchEnd.bind(this))  
+  }
+
   mouseDown(event) {
     this.setState({ dragging: true })
   }
 
   mouseMove(event) {
     let mouse2D = { x: event.clientX, y: event.clientY }
-    this.setState({ mouse2D: mouse2D, dragging: true})
+    this.setState({ mouse2D: mouse2D })
   }
 
   mouseUp(event) {
+    this.setState({ dragging: false, initDrawing: true })
+    this.canvas.mouseUp(this.state.mouse)
+  }
+
+  touchStart(event) {
+    this.setState({ dragging: true, mouse2D: { x: 0, y: 0 } })
+  }
+
+  touchMove(event) {
+    let mouse2D = { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    this.setState({ mouse2D: mouse2D })
+  }
+
+  touchEnd(event) {
     this.setState({ dragging: false, initDrawing: true })
     this.canvas.mouseUp()
   }
@@ -106,26 +113,27 @@ class App extends Component {
     }
   }
 
+
   render() {
-    /**<a-plane drawing-plane id="drawing-plane" class="cantap" position="0 5 -10" rotation="0 0 0" width="10" height="10" color="#FF0000"></a-plane>
-     * <a-scene
-          xrextras-almost-there
-          xrextras-loading
-          xrextras-runtime-error
-          renderer="colorManagement:true"
-          xrweb="allowedDevices:any;"
-          xrextras-gesture-detector
-        >
-          <a-camera id="camera" look-controls="false" position="0 8 0" raycaster="objects: .cantap" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
-          <a-cylinder drawing-plane id="drawing-plane" class="cantap" color="yellow" height="6" theta-start="100" radius="2" theta-length="180" position="0 10 -10" rotation="0 180 0"></a-cylinder>
-        </a-scene>*/ 
+    /**
+     * Replace <a-plane/> line with 1. or 2. to use different image targets. 
+     1. <xrextras-named-image-target name="target-1">
+          <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4" ></a-plane>
+        </xrextras-named-image-target> 
+     2. <xrextras-named-image-target name="target-2">
+          <a-cylinder drawing-plane id="drawing-plane" class="cantap" color="yellow" height="5" theta-start="100" radius="1.5" theta-length="310" position="0 -2 -10" rotation="0 180 0"></a-cylinder>
+        </xrextras-named-image-target>   
+        <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4" ></a-plane>
+     */
     return (
       <>
-        <Canvas />
-      
+        <Canvas />      
+        <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4" ></a-plane>
       </>
     )
   }
+
+
 }
 
 export default App

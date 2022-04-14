@@ -17,7 +17,8 @@ class Canvas extends Component {
       mode: 'drawing',
       lines: [],
       currentPoints: [],
-      isPhysics: true
+      isPhysics: true, 
+      physicsLine: []
     }
   }
 
@@ -45,7 +46,7 @@ class Canvas extends Component {
     let node = new Konva.Line({ points: points })
     let bb = node.getClientRect()
     let x = 0, y = 0, radius = Math.min(bb.width, bb.height)
-    if (this.state.mode !== 'emitter') {
+    if (this.state.mode !== 'emitter' && this.state.mode !== 'physics') {
       x = bb.x + bb.width/2
       y = bb.y + bb.height/2
       points = points.map((num, i) => {
@@ -63,6 +64,16 @@ class Canvas extends Component {
     if (this.state.mode === 'emitter') {
       this.emit.start()
     }
+    if (this.state.mode === 'physics') {
+      let physicsLines = this.state.lines.filter(line => line.type === 'physics')
+      this.state.physicsLine = physicsLines[0]
+      if (!this.state.physicsLine) return false
+      
+      let points = this.state.physicsLine.points
+      this.physics.x = points[0]
+      this.physics.y = points[1]
+      this.physics.width = (points[points.length -2] - points[0])*2
+    }
   }
 
   changeMode(mode) {
@@ -73,6 +84,7 @@ class Canvas extends Component {
     if (mode === 'drawing') return 'red'
     if (mode === 'emitter') return 'blue'
     if (mode === 'motion') return 'purple'
+    if (mode === 'physics') return 'green'
     return 'black'
   }
 
@@ -81,7 +93,13 @@ class Canvas extends Component {
   }
 
   getMaxValue(){
-    this.emit.max = document.getElementById("speedSlider").value
+    let value = document.getElementById("speedSlider").value
+    if (value === 0){
+      this.emit.max = 0
+    }
+    else {
+      this.emit.max = -1 * value
+    }
   }
 
   changeColor(color){
@@ -89,12 +107,14 @@ class Canvas extends Component {
   }
 
   render() {
-    return (
-      <>
-        <div style={{position: 'fixed', top: '10px', width:'100%', textAlign: 'center', zIndex: 1}}>
-          <button>
+    /**
+     * <button>
             Animate
           </button>
+     */
+    return (
+      <>
+        <div style={{position: 'fixed', top: '10px', width:'100%', textAlign: 'center', zIndex: 1}}> 
           <button onClick={ this.changeMode.bind(this, 'drawing') }>
             Drawing Line
           </button>
@@ -104,8 +124,11 @@ class Canvas extends Component {
           <button onClick={ this.changeMode.bind(this, 'emitter') }>
             Emitter Line
           </button>
+          <button onClick={ this.changeMode.bind(this, 'physics') }>
+            Physics Line
+          </button>
           <input name="isGoing" type="checkbox" checked={this.state.isPhysics} onChange={this.enablePhysics.bind(this)} />Enable Physics
-          <input id="speedSlider" type="range" min="0" max="20" defaultValue="10" onInput={this.getMaxValue.bind(this)}/>
+          <input id="speedSlider" type="range" min="-20" max="0" defaultValue="-10" onInput={this.getMaxValue.bind(this)}/>
           <button id ='button' style={{backgroundColor: "#000000", color: "#FFFFFF"}} onClick={this.changeColor.bind(this, 'black')}>
             Black
           </button>

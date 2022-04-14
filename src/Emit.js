@@ -30,7 +30,6 @@ class Emit extends Component {
 
   start() {
     let emitterLines = this.canvas.state.lines.filter(line => line.type === 'emitter')
-    console.log(emitterLines)
     let emitterLine = emitterLines[0]
     if (!emitterLine) return false
 
@@ -41,10 +40,11 @@ class Emit extends Component {
       let y = points[i+1]
       originPoints.push({ x: x, y: y })
     }
+
+    //Choosing a random point to start emission
     let randNum = Math.floor(Math.random() * (originPoints.length))
     let emitPoint = []
     emitPoint.push(originPoints[randNum])
-    console.log(randNum)
 
     let drawingLines = this.canvas.state.lines.filter(line => line.type === 'drawing')
     if (drawingLines.length === 0) return false
@@ -66,12 +66,11 @@ class Emit extends Component {
       let y = points[(this.state.step * i)*2+1] - motionOrigin.y
       offset = { x: x, y: y }
     }
-    // Choosing a different emitting point
     if (this.state.step == this.max){
+      // Choosing a different emitting point each time 
       let randNum = Math.floor(Math.random() * (this.state.originPoints.length))
       this.state.emitPoint = []
       this.state.emitPoint.push(this.state.originPoints[randNum])
-      console.log(randNum)
     }
     return {
       x: originPoint.x + offset.x + Math.random() * 30,
@@ -95,6 +94,7 @@ class Emit extends Component {
               y={ pos.y }
               points={ this.state.elementPoints }
               stroke={ this.color }
+              strokeWidth= '8'
             />
           )
         })}
