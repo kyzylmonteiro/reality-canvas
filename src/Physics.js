@@ -14,6 +14,10 @@ class Physics extends Component {
     this.canvas = props.canvas
     this.canvas.physics = this
     this.max = 30
+    // x and y points of where to place static body (based on where physics line is drawn)
+    this.x = 0
+    this.y = 0
+    this.width = 0 
     this.state = {
       step: 0,
       rects: [],
@@ -41,7 +45,6 @@ class Physics extends Component {
     Matter.Render.run(render)
     Matter.Runner.run(runner, engine)
     Matter.Events.on(engine, 'afterUpdate', this.afterUpdate.bind(this))
-    this.showBox()
 
     setInterval(() => {
       this.setState({ step: this.state.step + 1 })
@@ -49,7 +52,7 @@ class Physics extends Component {
   }
 
   showBox() {
-    let rect = { x: 400, y: 810, width: 810, height: 60 }
+    let rect = { x: this.x, y: this.y, width: this.width, height: 60 }
     let ground = Matter.Bodies.rectangle(rect.x, rect.y, rect.width, rect.height, { isStatic: true, mass: 10 })
     ground.id = 'ground'
     ground.restitution = 1
@@ -83,14 +86,18 @@ class Physics extends Component {
     let id = node.getAttr('id')
     let index = this.engine.world.bodies.map(b => b.id).indexOf(id)
     let body = this.engine.world.bodies[index]
-    let originPoint = node.getAttr('originPoint') || { x: 0, y: 0 }
+    let originPoint = node.getAttr('originPoint') || { x: 400, y: 0 }
     let x = body.position.x
     let y = body.position.y
     let degree = body.angle * 180 / Math.PI
     node.setAttrs({ x: x, y: y })
     node.rotation(degree)
     if (reset) {
-      console.log('reset')
+      console.log('reset')   
+      // Create static body when user draws physics line 
+      if(this.y !== 0){
+        this.showBox()
+      }
       let bodyIds = this.state.bodyIds
       _.pull(bodyIds, id)
       _.pullAt(this.engine.world.bodies, [index])
@@ -124,10 +131,11 @@ class Physics extends Component {
               height={ rect.height }
               offsetX={ rect.width/2 }
               offsetY={ rect.height/2 }
-              stroke={ 'black' }
+              //stroke={ 'black' }
             />
           )
         })}
+      
       </>
     )
   }
