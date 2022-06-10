@@ -127,8 +127,18 @@ class App extends Component {
      */
     return (
       <>
-        <Canvas />      
-        <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="10" height="10" color="#7BC8A4" ></a-plane>
+        <Canvas />   
+        <a-scene
+          xrextras-almost-there
+          xrextras-loading
+          xrextras-runtime-error
+          renderer="colorManagement:true"
+          xrweb="allowedDevices:any;"
+          xrextras-gesture-detector
+        >  
+        <a-camera id="camera" look-controls="false" position="0 8 0" raycaster="objects: .cantap" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
+        <a-plane drawing-plane id="drawing-plane" class="cantap" position="0 0 -10" rotation="0 0 0" width="20" height="20" color="#7BC8A4" ></a-plane>
+        </a-scene>
       </>
     )
   }
